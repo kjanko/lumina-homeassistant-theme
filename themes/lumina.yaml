@@ -295,8 +295,8 @@ Lumina:
       border-radius: inherit;
       background: linear-gradient(180deg,
         rgba(255,255,255, calc(0.22 - var(--btn-off, 0) * 0.10)),
-        rgba(var(--btn, var(--lumina-cyan)), calc(0.30 - var(--btn-off, 0) * 0.20)) 45%,
-        rgba(var(--btn, var(--lumina-cyan)), calc(0.12 - var(--btn-off, 0) * 0.08)));
+        rgba(var(--btn, var(--lumina-cyan)), calc(0.45 - var(--btn-off, 0) * 0.35)) 45%,
+        rgba(var(--btn, var(--lumina-cyan)), calc(0.20 - var(--btn-off, 0) * 0.16)));
       -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
