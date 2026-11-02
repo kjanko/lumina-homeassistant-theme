@@ -19,6 +19,8 @@ Lumina:
   lumina-icon-background: rgba(255,255,255,0.07)
   lumina-border: 1px solid rgba(255,255,255,0.10)
   lumina-card-shadow: 0 4px 16px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.08)
+  # Bubble cards: drop shadow only; their bevel line is drawn above the content (see card-mod-card)
+  lumina-bubble-shadow: 0 4px 16px rgba(0,0,0,0.28)
   lumina-name-color: rgba(255,255,255,0.82)
   lumina-state-color: rgba(255,255,255,0.35)
   lumina-icon-color: rgba(255,255,255,0.55)
@@ -44,6 +46,7 @@ Lumina:
   lumina-indigo: 99,102,241
   lumina-red: 220,80,80
   lumina-magenta: 226,0,116
+  lumina-neutral: 255,255,255     # a button that is off (with --btn-off: 1)
 
   # Section titles (Bubble separators)
   lumina-separator-line: linear-gradient(90deg, rgba(255,255,255,0.18), transparent)
@@ -58,12 +61,12 @@ Lumina:
   # Button cards only, so separators and other card types keep their look
   bubble-button-main-background-color: var(--lumina-card-background)
   bubble-button-border: var(--lumina-border)
-  bubble-button-box-shadow: var(--lumina-card-shadow)
+  bubble-button-box-shadow: var(--lumina-bubble-shadow)
   bubble-button-icon-background-color: var(--lumina-icon-background)
   # Select cards: same look as buttons
   bubble-select-main-background-color: var(--lumina-card-background)
   bubble-select-border: var(--lumina-border)
-  bubble-select-box-shadow: var(--lumina-card-shadow)
+  bubble-select-box-shadow: var(--lumina-bubble-shadow)
   bubble-select-icon-background-color: var(--lumina-icon-background)
   bubble-select-arrow-background-color: var(--lumina-icon-background)
   bubble-select-button-border-radius: var(--lumina-sub-button-radius)
@@ -71,20 +74,20 @@ Lumina:
   # (Bubble reads --bubble-<card_type>-*; the generic --bubble-* ones would also restyle pop-ups)
   bubble-climate-main-background-color: var(--lumina-card-background)
   bubble-climate-border: var(--lumina-border)
-  bubble-climate-box-shadow: var(--lumina-card-shadow)
+  bubble-climate-box-shadow: var(--lumina-bubble-shadow)
   bubble-climate-icon-background-color: var(--lumina-icon-background)
   bubble-climate-button-background-color: var(--lumina-icon-background)
   bubble-cover-main-background-color: var(--lumina-card-background)
   bubble-cover-border: var(--lumina-border)
-  bubble-cover-box-shadow: var(--lumina-card-shadow)
+  bubble-cover-box-shadow: var(--lumina-bubble-shadow)
   bubble-cover-icon-background-color: var(--lumina-icon-background)
   bubble-media-player-main-background-color: var(--lumina-card-background)
   bubble-media-player-border: var(--lumina-border)
-  bubble-media-player-box-shadow: var(--lumina-card-shadow)
+  bubble-media-player-box-shadow: var(--lumina-bubble-shadow)
   bubble-media-player-icon-background-color: var(--lumina-icon-background)
   bubble-calendar-main-background-color: var(--lumina-card-background)
   bubble-calendar-border: var(--lumina-border)
-  bubble-calendar-box-shadow: var(--lumina-card-shadow)
+  bubble-calendar-box-shadow: var(--lumina-bubble-shadow)
   # Every dropdown menu (select cards and select sub-buttons)
   bubble-select-list-background-color: rgba(18,15,40,0.92)
   bubble-select-list-item-accent-color: rgba(255,255,255,0.10)
@@ -227,11 +230,29 @@ Lumina:
       --glow-on: 0;
     }
     ha-card.lumina-glow .bubble-button-card-container {
-      --lumina-glow-layer: linear-gradient(135deg, rgba(var(--glow), calc(var(--glow-on) * 0.20)), rgba(var(--glow-dim, var(--glow)), calc(var(--glow-on) * 0.10)));
+      --lumina-glow-layer: linear-gradient(135deg, rgba(var(--glow), calc(var(--glow-on) * 0.14)), rgba(var(--glow-dim, var(--glow)), calc(var(--glow-on) * 0.08)));
       background: var(--lumina-glow-layer), rgba(255,255,255, calc(0.05 - var(--glow-on) * 0.05)) !important;
-      border: 1px solid rgba(var(--glow), calc(0.10 + var(--glow-on) * 0.30)) !important;
-      box-shadow: 0 4px 16px rgba(0,0,0, calc(0.25 - var(--glow-on) * 0.25)), 0 8px 28px rgba(var(--glow), calc(var(--glow-on) * 0.18)), inset 0 1px 0 rgba(255,255,255, calc(0.08 + var(--glow-on) * 0.10)) !important;
+      border: 1px solid rgba(var(--glow), calc(0.10 + var(--glow-on) * 0.20)) !important;
+      box-shadow: var(--lumina-bubble-shadow), 0 8px 28px rgba(var(--glow), calc(var(--glow-on) * 0.10)) !important;
       transition: all 0.35s cubic-bezier(0.4,0,0.2,1) !important;
+    }
+    /* Bevel: a line just under the top edge, in the border's colour at 80% of its strength
+       (white 8% on a plain card, the glow colour on a lit one), so border and line read as one
+       raised edge. It's drawn on its own layer above the content, so a slider fill can't hide
+       part of it, with a radius 1px smaller than the card's so it stays parallel in the corners.
+       Cards with their own border colour set --glow / --glow-on to match it. */
+    .bubble-button-card-container::after,
+    .bubble-select-card-container::after,
+    .bubble-climate-container::after,
+    .bubble-cover-container::after,
+    .bubble-media-player-container::after,
+    .bubble-calendar-container::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: calc(var(--lumina-card-radius) - 1px);
+      box-shadow: inset 0 1px 0 rgba(var(--glow), calc((0.10 + var(--glow-on) * 0.20) * 0.8));
+      pointer-events: none;
     }
     ha-card.lumina-glow .bubble-icon-container {
       background: rgba(var(--glow), calc(0.07 + var(--glow-on) * 0.05)) !important;
@@ -249,6 +270,53 @@ Lumina:
     /* Sliders: the card glows, the fill is a quiet dark overlay */
     ha-card.lumina-glow .bubble-range-fill {
       background: var(--lumina-slider-fill) !important;
+    }
+
+    /* Buttons: every sub-button with a background has one style, and its colour is a
+       parameter. A card sets --btn (an r,g,b triplet) per button, for example
+       .bubble-sub-button-2 { --btn: var(--lumina-red); }. Without --btn a button is cyan.
+       Off: --btn: var(--lumina-neutral); --btn-off: 1 gives the flat grey Lumina icon look
+       (no colour, dim icon). Sub-buttons with show_background: false stay plain. */
+    .bubble-sub-button.background-on,
+    .bubble-sub-button.background-off {
+      background: linear-gradient(135deg, rgba(var(--btn, var(--lumina-cyan)), calc(0.11 - var(--btn-off, 0) * 0.04)), rgba(var(--btn, var(--lumina-cyan)), calc(0.21 - var(--btn-off, 0) * 0.14))) !important;
+      border: 1px solid transparent !important;
+      box-shadow: none !important;
+      color: rgba(255,255,255, calc(0.95 - var(--btn-off, 0) * 0.40)) !important;
+      transition: transform 0.15s ease, filter 0.2s ease, background 0.35s ease !important;
+    }
+    /* Glass edge: one 1px ring, lit at the top and fading into the button colour below */
+    .bubble-sub-button.background-on::before,
+    .bubble-sub-button.background-off::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      padding: 1px;
+      border-radius: inherit;
+      background: linear-gradient(180deg,
+        rgba(255,255,255, calc(0.22 - var(--btn-off, 0) * 0.10)),
+        rgba(var(--btn, var(--lumina-cyan)), calc(0.30 - var(--btn-off, 0) * 0.20)) 45%,
+        rgba(var(--btn, var(--lumina-cyan)), calc(0.12 - var(--btn-off, 0) * 0.08)));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    /* Icons in the button colour, lifted a little towards white so they stay crisp on their own
+       tint (off: --btn is white, so a dim grey icon) */
+    .bubble-sub-button.background-on .bubble-sub-button-icon,
+    .bubble-sub-button.background-off .bubble-sub-button-icon {
+      color: color-mix(in srgb, rgb(var(--btn, var(--lumina-cyan))) 78%, white) !important;
+      opacity: calc(1 - var(--btn-off, 0) * 0.45);
+    }
+    .bubble-sub-button.background-on .bubble-sub-button-name-container,
+    .bubble-sub-button.background-off .bubble-sub-button-name-container {
+      color: rgba(255,255,255, calc(0.95 - var(--btn-off, 0) * 0.40)) !important;
+    }
+    .bubble-sub-button.background-on:active,
+    .bubble-sub-button.background-off:active {
+      transform: scale(0.92);
+      filter: brightness(1.25);
     }
 
     /* Disabled: a card or sub-button whose action would do nothing right now.
