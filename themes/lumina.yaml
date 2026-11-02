@@ -111,6 +111,14 @@ Lumina:
   graph-color-7: rgb(220,80,80)
   graph-color-8: rgb(100,180,255)
 
+  # Form fields everywhere in HA (pickers, dropdowns, text and time inputs): navy glass instead
+  # of grey. The underline turns primary-color (cyan) on focus. Solid colours, not rgba: a time
+  # input overlaps its hh/mm halves, and a see-through fill shows the overlap as a strip.
+  ha-color-form-background: "#25233f"
+  ha-color-form-background-hover: "#2f2c48"
+  ha-color-form-background-disabled: "#1a1735"
+  ha-color-border-neutral-loud: rgba(255,255,255,0.16)
+
   # State colours from the palette (thermostats, tiles and their mode buttons)
   state-inactive-color: rgba(255,255,255,0.30)
   state-climate-heat-color: rgb(255,180,50)
