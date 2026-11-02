@@ -6,7 +6,7 @@ Lumina:
   lovelace-background: >-
     radial-gradient(1200px 600px at 12% 10%, rgba(180,60,230,0.32) 0%, transparent 55%),
     radial-gradient(1000px 700px at 88% 20%, rgba(40,140,255,0.30) 0%, transparent 55%),
-    radial-gradient(1400px 800px at 75% 85%, rgba(255,60,140,0.25) 0%, transparent 60%),
+    radial-gradient(1400px 800px at 75% 85%, rgba(255,60,140,0.18) 0%, transparent 60%),
     radial-gradient(1000px 700px at 10% 90%, rgba(60,220,220,0.22) 0%, transparent 55%),
     linear-gradient(160deg, #0a0817 0%, #120f28 50%, #07122a 100%)
 
@@ -16,9 +16,13 @@ Lumina:
   lumina-icon-radius: 14px        # 44px icon in a 56px card: 6px in
   lumina-sub-button-radius: 10px  # 36px sub-button in a 56px card: 10px in
   lumina-card-background: rgba(255,255,255,0.05)
+  # Bubble cards: glass that catches light at the top-left and darkens into the page's navy
+  lumina-glass-fill: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.01) 45%, rgba(12,10,35,0.22) 100%)
   lumina-icon-background: rgba(255,255,255,0.07)
   lumina-border: 1px solid rgba(255,255,255,0.10)
-  lumina-card-shadow: 0 4px 16px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.08)
+  # Shadow plus edge for cards and panels that aren't Bubble cards: a crisp 1px line all round
+  # and a 1px light line along the top and left (the same edge Bubble cards get)
+  lumina-card-shadow: 0 4px 16px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,255,255,0.08), inset 1px 1px 0 0 rgba(255,255,255,0.14)
   # Bubble cards: drop shadow only; their bevel line is drawn above the content (see card-mod-card)
   lumina-bubble-shadow: 0 4px 16px rgba(0,0,0,0.28)
   lumina-name-color: rgba(255,255,255,0.82)
@@ -33,7 +37,7 @@ Lumina:
   lumina-glass-background: rgba(255,255,255,0.04)
   lumina-glass-blur: blur(30px) saturate(180%)
   lumina-glass-radius: 28px
-  lumina-glass-shadow: 0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18)
+  lumina-glass-shadow: 0 12px 40px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.08), inset 1px 1px 0 0 rgba(255,255,255,0.14)
   lumina-glass-padding: 14px
   lumina-glass-inner-padding: 8px
 
@@ -98,7 +102,7 @@ Lumina:
   # Every other card (graphs, entities, weather, ...): the same glass as Bubble buttons
   # (Their glass background is set in card-mod-card, not as ha-card-background: Bubble Card builds
   # pop-ups and their backdrop from ha-card-background, and the white glass tint made them white.)
-  ha-card-border-color: rgba(255,255,255,0.10)
+  ha-card-border-width: 0px     # the edge is part of lumina-card-shadow
   ha-card-border-radius: var(--lumina-card-radius)
   ha-card-box-shadow: var(--lumina-card-shadow)
   # Graph lines and bars in palette order
@@ -142,6 +146,13 @@ Lumina:
     .bubble-range-slider {
       border-radius: 0 !important;
     }
+    /* A slider card's fill stays inside the 1px edge, so the edge line never sits on the fill */
+    .bubble-button-card-container > .bubble-range-slider {
+      inset: 1px !important;
+      width: auto !important;
+      height: auto !important;
+      border-radius: calc(var(--lumina-card-radius) - 1px) !important;
+    }
     .bubble-button-card-container,
     .bubble-select-card-container,
     .bubble-climate-container,
@@ -150,6 +161,8 @@ Lumina:
     .bubble-calendar-container {
       backdrop-filter: var(--lumina-card-blur) !important;
       border-radius: var(--lumina-card-radius) !important;
+      background: var(--lumina-glass-fill);
+      border: none !important;  /* the edge layer below draws the edge */
     }
     .bubble-icon-container {
       border-radius: var(--lumina-icon-radius) !important;
@@ -158,12 +171,12 @@ Lumina:
     }
     /* Equal margins, so the concentric radii hold on every side: the icon sits 6px from the
        card's left, top and bottom edges, the sub-buttons 10px from its right, top and bottom.
-       (The values add the card's 1px border.) Cards with their own layout keep it. */
+       Cards with their own layout keep it. */
     .bubble-button-card-container .bubble-icon-container {
-      margin-inline-start: 5px;
+      margin-inline-start: 6px;
     }
     .bubble-button-card-container .bubble-sub-button-container {
-      inset-inline-end: 9px;
+      inset-inline-end: 10px;
     }
     .bubble-name {
       font-size: 14px !important;
@@ -223,8 +236,8 @@ Lumina:
     ha-dropdown::part(menu) {
       backdrop-filter: var(--lumina-glass-blur) !important;
       -webkit-backdrop-filter: var(--lumina-glass-blur) !important;
-      border: var(--lumina-border) !important;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.12) !important;
+      border: none !important;
+      box-shadow: var(--lumina-glass-shadow) !important;
     }
 
     /* Glow system. A card opts in from its styles with card.classList.add('lumina-glow')
@@ -239,27 +252,29 @@ Lumina:
     }
     ha-card.lumina-glow .bubble-button-card-container {
       --lumina-glow-layer: linear-gradient(135deg, rgba(var(--glow), calc(var(--glow-on) * 0.14)), rgba(var(--glow-dim, var(--glow)), calc(var(--glow-on) * 0.08)));
-      background: var(--lumina-glow-layer), rgba(255,255,255, calc(0.05 - var(--glow-on) * 0.05)) !important;
-      border: 1px solid rgba(var(--glow), calc(0.10 + var(--glow-on) * 0.20)) !important;
+      background: var(--lumina-glow-layer), var(--lumina-glass-fill) !important;
       box-shadow: var(--lumina-bubble-shadow), 0 8px 28px rgba(var(--glow), calc(var(--glow-on) * 0.10)) !important;
       transition: all 0.35s cubic-bezier(0.4,0,0.2,1) !important;
     }
-    /* Bevel: a line just under the top edge, in the border's colour at 80% of its strength
-       (white 8% on a plain card, the glow colour on a lit one), so border and line read as one
-       raised edge. It's drawn on its own layer above the content, so a slider fill can't hide
-       part of it, with a radius 1px smaller than the card's so it stays parallel in the corners.
-       Cards with their own border colour set --glow / --glow-on to match it. */
-    .bubble-button-card-container::after,
-    .bubble-select-card-container::after,
-    .bubble-climate-container::after,
-    .bubble-cover-container::after,
-    .bubble-media-player-container::after,
-    .bubble-calendar-container::after {
+    /* Edge: a crisp 1px line all around in the glow colour (white on a plain card), plus a 1px
+       light line along the top and left in the colour lifted towards white, which fades out
+       naturally around the top-right and bottom-left corners. Inset shadows, not a masked
+       gradient: the browser snaps them to whole pixels, so they stay sharp on cards at
+       fractional positions. On its own layer above the content, so a slider fill can't hide
+       it. Cards with their own border colour set --glow / --glow-on. */
+    .bubble-button-card-container:not(.no-background)::before,
+    .bubble-select-card-container::before,
+    .bubble-climate-container::before,
+    .bubble-cover-container::before,
+    .bubble-media-player-container::before,
+    .bubble-calendar-container::before {
       content: "";
       position: absolute;
       inset: 0;
-      border-radius: calc(var(--lumina-card-radius) - 1px);
-      box-shadow: inset 0 1px 0 rgba(var(--glow), calc((0.10 + var(--glow-on) * 0.20) * 0.8));
+      border-radius: inherit;
+      box-shadow:
+        inset 0 0 0 1px rgba(var(--glow), calc(0.08 + var(--glow-on) * 0.16)),
+        inset 1px 1px 0 0 color-mix(in srgb, color-mix(in srgb, rgb(var(--glow)) 60%, white) calc(14% + var(--glow-on) * 12%), transparent);
       pointer-events: none;
     }
     ha-card.lumina-glow .bubble-icon-container {
@@ -293,21 +308,18 @@ Lumina:
       color: rgba(255,255,255, calc(0.95 - var(--btn-off, 0) * 0.40)) !important;
       transition: transform 0.15s ease, filter 0.2s ease, background 0.35s ease !important;
     }
-    /* Glass edge: one 1px ring, lit at the top and fading into the button colour below */
+    /* Glass edge: a 1px line all round in the button colour and a 1px light line along the top
+       and left. Inset shadows, not a masked gradient, so the browser snaps them to whole pixels
+       and they stay sharp wherever the button sits. The ring covers the transparent border. */
     .bubble-sub-button.background-on::before,
     .bubble-sub-button.background-off::before {
       content: "";
       position: absolute;
       inset: -1px;
-      padding: 1px;
       border-radius: inherit;
-      background: linear-gradient(180deg,
-        rgba(255,255,255, calc(0.22 - var(--btn-off, 0) * 0.10)),
-        rgba(var(--btn, var(--lumina-cyan)), calc(0.45 - var(--btn-off, 0) * 0.35)) 45%,
-        rgba(var(--btn, var(--lumina-cyan)), calc(0.20 - var(--btn-off, 0) * 0.16)));
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
+      box-shadow:
+        inset 0 0 0 1px rgba(var(--btn, var(--lumina-cyan)), calc(0.45 - var(--btn-off, 0) * 0.35)),
+        inset 1px 1px 0 0 rgba(255,255,255, calc(0.22 - var(--btn-off, 0) * 0.10));
       pointer-events: none;
     }
     /* Icons in the button colour, lifted a little towards white so they stay crisp on their own
@@ -345,7 +357,7 @@ Lumina:
       background: var(--lumina-glass-background) !important;
       backdrop-filter: var(--lumina-glass-blur) !important;
       -webkit-backdrop-filter: var(--lumina-glass-blur) !important;
-      border: var(--lumina-border) !important;
+      border: none !important;
       border-radius: var(--lumina-glass-radius) !important;
       box-shadow: var(--lumina-glass-shadow) !important;
       padding: var(--lumina-glass-padding) !important;

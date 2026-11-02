@@ -16,9 +16,9 @@ Lumina turns a [Bubble Card](https://github.com/Clooos/Bubble-Card) dashboard in
 
 ## What it does
 
-- **Glass everywhere**: every Bubble Card type (button, select, climate, cover, media player, calendar), plus graphs, thermostats, gauges and entity cards. No setup per card.
+- **Glass everywhere**: every Bubble Card type (button, select, climate, cover, media player, calendar), plus graphs, thermostats, gauges and entity cards. Bubble cards are glass that catches light at the top-left and deepens towards the bottom-right, and every card and panel has the same crisp edge. No setup per card.
 - **Rooms in glass panels**: A room is one glass panel, and the devices in it sit in smaller panels inside it.
-- **Glow**: A card can glow in any colour: a light in its own colour, a switch green or red, a robot by what it's doing. A soft bevel along the top edge follows the card's colour.
+- **Glow**: A card can glow in any colour: a light in its own colour, a switch green or red, a robot by what it's doing. The card's edge takes the same colour.
 - **One button style**: Every button is tinted glass with a light glass edge and an icon in its colour. A card only picks the colour; buttons that are off are flat grey.
 - **Greyed out when it would do nothing**: The TV's inputs and volume while it's off, "turn off" while nothing is on.
 - **One palette**: Eight colours shared by glows, graph lines and thermostat modes.
@@ -138,7 +138,7 @@ styles: |
 
 ### Buttons
 
-Every Bubble sub-button with a background gets the same look: a tint of its colour, a 1px glass edge that's lighter at the top, and an icon in the colour. A card only sets the colour, per button, with `--btn` (an `r,g,b` triplet or a palette variable). Without it a button is cyan.
+Every Bubble sub-button with a background gets the same look: a tint of its colour, a crisp 1px edge in its colour that's lighter along the top and left, and an icon in the colour. A card only sets the colour, per button, with `--btn` (an `r,g,b` triplet or a palette variable). Without it a button is cyan.
 
 A button that is off looks like a plain grey Lumina button: set `--btn: var(--lumina-neutral); --btn-off: 1`.
 
@@ -191,7 +191,7 @@ The background is `lovelace-background`. A dashboard view with its own `backgrou
 ## Good to know
 
 - **Other cards.** Standard cards (graphs, thermostats, gauges, entities, weather) get the glass background, rounded corners and palette colours from Home Assistant's own theme variables. Their layout stays Home Assistant's own; only Bubble Card gets the glow and greyed-out styles.
-- **Cards with their own border colour.** The bevel line under a Bubble card's top edge uses the glow colour. A card that draws its own coloured border without `lumina-glow` sets `--glow` and `--glow-on` on `.bubble-button-card-container` so the line matches it, and `.bubble-button-card-container::after { display: none !important; }` removes the line from a card that has no edge at all.
+- **Edges in a card's own colour.** A Bubble card's edge uses its glow colour. A card that wants a coloured edge without glowing sets `--glow` and `--glow-on` on `.bubble-button-card-container`, and `.bubble-button-card-container::before { display: none !important; }` removes the edge from a card that shouldn't have one (e.g. a header without a background).
 - **Card styles and the theme.** The glow, greyed-out and glass rules use `!important` so they win over Bubble's inline colours. A card's own rule that should beat them needs a more specific selector, e.g. `ha-card .bubble-separator .bubble-line` instead of `.bubble-line`.
 - **Cards that appear later.** Cards created after the page loads, such as inside a `conditional` card, may not pick up theme styles until the page is reloaded. To show and hide rows, keep the cards on the page and hide them from their own styles instead:
   ```yaml
