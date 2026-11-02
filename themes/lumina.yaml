@@ -279,7 +279,7 @@ Lumina:
        (no colour, dim icon). Sub-buttons with show_background: false stay plain. */
     .bubble-sub-button.background-on,
     .bubble-sub-button.background-off {
-      background: linear-gradient(135deg, rgba(var(--btn, var(--lumina-cyan)), calc(0.11 - var(--btn-off, 0) * 0.04)), rgba(var(--btn, var(--lumina-cyan)), calc(0.21 - var(--btn-off, 0) * 0.14))) !important;
+      background: linear-gradient(135deg, rgba(var(--btn, var(--lumina-cyan)), calc(0.05 + var(--btn-off, 0) * 0.02)), rgba(var(--btn, var(--lumina-cyan)), calc(0.10 - var(--btn-off, 0) * 0.03))) !important;
       border: 1px solid transparent !important;
       box-shadow: none !important;
       color: rgba(255,255,255, calc(0.95 - var(--btn-off, 0) * 0.40)) !important;
