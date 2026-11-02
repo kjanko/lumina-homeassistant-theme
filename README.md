@@ -12,7 +12,7 @@ Lumina turns a [Bubble Card](https://github.com/Clooos/Bubble-Card) dashboard in
   <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=kjanko&repository=lumina-homeassistant-theme&category=theme"><img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open this repository in HACS" /></a>
 </p>
 
-![The same dashboard with Lumina and with the default theme](docs/compare-living-room.png)
+![The same dashboard with Lumina and with the default theme](docs/compare-glass.png)
 
 ## What it does
 
@@ -24,12 +24,12 @@ Lumina turns a [Bubble Card](https://github.com/Clooos/Bubble-Card) dashboard in
 - **One palette**: Eight colours shared by glows, graph lines and thermostat modes.
 - **Quiet titles, a centred divider**: Small uppercase section titles with a fading line, and a divider that's brightest in the middle.
 
-<p align="center"><img src="docs/dashboard.png" alt="A full Lumina dashboard" /></p>
+<p align="center"><img src="docs/dashboard-glass.png" alt="A full Lumina dashboard" /></p>
 
 <table>
   <tr>
-    <td align="center"><img src="docs/phone.png" width="300" alt="Lumina on a phone" /><br /><sub>On a phone</sub></td>
-    <td align="center"><img src="docs/popup-sheet.png" width="300" alt="A Bubble Card pop-up in Lumina" /><br /><sub>Pop-ups and dropdowns</sub></td>
+    <td align="center"><img src="docs/phone-glass.png" width="300" alt="Lumina on a phone" /><br /><sub>On a phone</sub></td>
+    <td align="center"><img src="docs/popup-glass.png" width="300" alt="A Bubble Card pop-up in Lumina" /><br /><sub>Pop-ups and dropdowns</sub></td>
   </tr>
 </table>
 
