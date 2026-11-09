@@ -153,6 +153,35 @@ styles: |
 
 Sub-buttons with `show_background: false` stay plain text or icons.
 
+### Pills
+
+A pill shows a reading, such as `21°` or `0 lx`, in glass tinted by its state colour. It has the same shape and edge as a sub-button, so a row of pills and buttons lines up. Give any element the `lumina-pill` class and set `--pill` to the reading's colour (an `r,g,b` triplet or a palette variable). Inside goes an icon, the value and an optional `.unit`.
+
+A reading with no state colour is plain grey glass: `--pill-off: 1`. Add `lumina-tap` to a pill that opens something, so it presses like a button.
+
+A temperature in a button-card custom field, warm or cool by its value:
+
+```yaml
+custom_fields:
+  temp: |
+    [[[
+      const t = Number(states['sensor.bathroom_temperature'].state);
+      const c = t < 16 ? 'var(--lumina-blue)' : t < 19 ? 'var(--lumina-sky)'
+              : t < 23 ? 'var(--lumina-peach)' : t < 26 ? 'var(--lumina-amber)' : 'var(--lumina-red)';
+      return `<span class="lumina-pill" style="--pill: ${c}">
+        <ha-icon icon="mdi:thermometer"></ha-icon>${Math.round(t)}°</span>`;
+    ]]]
+```
+
+A light level, with its unit:
+
+```html
+<span class="lumina-pill" style="--pill: var(--lumina-sun)">
+  <ha-icon icon="mdi:white-balance-sunny"></ha-icon>40<span class="unit">lx</span></span>
+```
+
+Sizes come from `--lumina-pill-height`, `--lumina-pill-radius` (the sub-button radius), `--lumina-pill-value-color` and `--lumina-pill-unit-color`. Set `--lumina-pill-height` on a pill to make it grow with its card.
+
 ### Greyed out
 
 Add `lumina-disabled` to a card, or to one of its buttons, while its action would do nothing. It is dimmed, grey and can't be tapped.
@@ -181,6 +210,11 @@ Each colour is an `r,g,b` triplet, so it works as a `--glow` value and in `rgba(
 | `--lumina-indigo` | 99,102,241 |
 | `--lumina-red` | 220,80,80 |
 | `--lumina-magenta` | 226,0,116 |
+| `--lumina-peach` | 255,170,130 |
+| `--lumina-sky` | 150,190,255 |
+| `--lumina-sun` | 255,210,120 |
+
+Peach, sky and sun are reading colours for pills: a comfortable temperature, a cool one, and dim daylight.
 
 ## Customising
 

@@ -51,6 +51,17 @@ Lumina:
   lumina-red: 220,80,80
   lumina-magenta: 226,0,116
   lumina-neutral: 255,255,255     # a button that is off (with --btn-off: 1)
+  # Reading colours (pills): the warm and cool steps between the palette colours
+  lumina-peach: 255,170,130       # comfortable temperature
+  lumina-sky: 150,190,255         # cool temperature
+  lumina-sun: 255,210,120         # dim daylight
+
+  # Pills: a reading (21°, 0 lx) in glass tinted by its state colour. Same shape and edge as
+  # a sub-button, so a row of pills and buttons lines up.
+  lumina-pill-radius: var(--lumina-sub-button-radius)
+  lumina-pill-height: 28px
+  lumina-pill-value-color: var(--lumina-name-color)
+  lumina-pill-unit-color: rgba(255,255,255,0.45)
 
   # Section titles (Bubble separators)
   lumina-separator-line: linear-gradient(90deg, rgba(255,255,255,0.18), transparent)
@@ -335,6 +346,53 @@ Lumina:
     }
     .bubble-sub-button.background-on:active,
     .bubble-sub-button.background-off:active {
+      transform: scale(0.92);
+      filter: brightness(1.25);
+    }
+
+    /* Pills: a reading in glass tinted by its state colour. Any element with class
+       "lumina-pill" (a span in a button-card custom field, a div in a markdown card).
+       --pill sets the colour (an r,g,b triplet), for example a temperature's warmth.
+       A reading with no state colour is plain grey glass: --pill-off: 1 (like an off
+       button). Inside: an ha-icon, the value, and an optional .unit. Add "lumina-tap"
+       to a pill that opens something, so it presses like a button. */
+    .lumina-pill {
+      --pill-c: var(--pill, var(--lumina-neutral));
+      --pill-o: var(--pill-off, 0);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      box-sizing: border-box;
+      height: var(--lumina-pill-height);
+      min-width: 0;
+      padding: 0 7px 0 6px;
+      border-radius: var(--lumina-pill-radius);
+      background: linear-gradient(135deg, rgba(var(--pill-c), calc(0.15 - var(--pill-o) * 0.07)), rgba(var(--pill-c), calc(0.05 - var(--pill-o) * 0.02)));
+      box-shadow:
+        inset 0 0 0 1px rgba(var(--pill-c), calc(0.40 - var(--pill-o) * 0.30)),
+        inset 1px 1px 0 0 rgba(255,255,255, calc(0.16 - var(--pill-o) * 0.02));
+      color: var(--lumina-pill-value-color);
+      font-weight: 400;
+      white-space: nowrap;
+      transition: transform 0.15s ease, filter 0.2s ease, background 0.35s ease, box-shadow 0.35s ease;
+    }
+    .lumina-pill ha-icon {
+      --mdc-icon-size: 15px;
+      display: flex;
+      margin: 0 !important;
+      color: color-mix(in srgb, rgb(var(--pill-c)) 78%, white);
+      opacity: calc(1 - var(--pill-o) * 0.45);
+    }
+    .lumina-pill .unit {
+      margin-left: 1px;
+      font-size: 0.9em;
+      color: var(--lumina-pill-unit-color);
+    }
+    .lumina-pill.lumina-tap {
+      cursor: pointer;
+    }
+    .lumina-pill.lumina-tap:active {
       transform: scale(0.92);
       filter: brightness(1.25);
     }
